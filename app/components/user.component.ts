@@ -1,35 +1,11 @@
 import { Component } from '@angular/core';
+import { PostsService } from '../services/posts.service';
 
 @Component({
+  moduleId: module.id,
   selector: 'user',
-  template: `
-  <h1>Hello {{name}}</h1>
-  <p><strong>Email:</strong> {{email}}</p>
-  <p><strong>Address:</strong> {{address.street}} {{address.city}}, {{address.state}}</p>
-  <button (click)="toggleHobbies()">{{showHobbies ? "Hide Hobbies" : "Show Hobbies"}}</button>
-  <div *ngIf="showHobbies">
-    <h3>Hobbies</h3>
-    <ul>
-      <li *ngFor="let hobby of hobbies; let i = index">{{hobby}} <button (click)="deleteHobby(i)">&times;</button></li>
-    </ul>
-    <form (submit)="addHobby(hobby.value)">
-      <label>Add Hobby: </label><br />
-      <input type="text" #hobby/><br />
-    </form>
-  </div>
-  <hr />
-  <form>
-    <label>Name: </label><br />
-    <input type="text" name="name" [(ngModel)]="name"/><br />
-    <label>Email: </label><br />
-    <input type="text" name="email" [(ngModel)]="email"/><br />
-    <label>Address: </label><br />
-    <input type="text" name="address.street" [(ngModel)]="address.street"/><br />
-    <label>City: </label><br />
-    <input type="text" name="address.city" [(ngModel)]="address.city"/><br />
-    <label>State: </label><br />
-    <input type="text" name="address.state" [(ngModel)]="address.state"/>
-  </form>`,
+  templateUrl: 'user.component.html',
+  providers: [PostsService]
 })
 
 export class UserComponent  {
@@ -38,8 +14,9 @@ export class UserComponent  {
   address: address;
   hobbies: string[];
   showHobbies: boolean;
+  posts: Post[];
 
-  constructor(){
+  constructor(private postsService: PostsService){
     this.name = 'Josh';
     this.email = 'josh@test.com';
     this.address = {
@@ -49,6 +26,10 @@ export class UserComponent  {
     }
     this.hobbies = ["Music", "Movies", "Sports"];
     this.showHobbies = true;
+
+    this.postsService.getPosts().subscribe(posts => {
+      this.posts = posts;
+    });
   }
 
   toggleHobbies(){
@@ -72,4 +53,10 @@ interface address {
   street: string;
   city: string;
   state: string;
+}
+
+interface Post {
+  id: number;
+  title: string;
+  body: string;
 }

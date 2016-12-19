@@ -9,23 +9,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var platform_browser_1 = require('@angular/platform-browser');
-var forms_1 = require('@angular/forms');
 var http_1 = require('@angular/http');
-var app_component_1 = require('./app.component');
-var user_component_1 = require('./components/user.component');
-var AppModule = (function () {
-    function AppModule() {
+require('rxjs/add/operator/map');
+var PostsService = (function () {
+    function PostsService(http) {
+        this.http = http;
+        console.log("PostsService initialized...");
     }
-    AppModule = __decorate([
-        core_1.NgModule({
-            imports: [platform_browser_1.BrowserModule, forms_1.FormsModule, http_1.HttpModule],
-            declarations: [app_component_1.AppComponent, user_component_1.UserComponent],
-            bootstrap: [app_component_1.AppComponent]
-        }), 
-        __metadata('design:paramtypes', [])
-    ], AppModule);
-    return AppModule;
+    PostsService.prototype.getPosts = function () {
+        return this.http.get('https://jsonplaceholder.typicode.com/posts').map(function (res) { return res.json(); });
+    };
+    PostsService = __decorate([
+        core_1.Injectable(), 
+        __metadata('design:paramtypes', [http_1.Http])
+    ], PostsService);
+    return PostsService;
 }());
-exports.AppModule = AppModule;
-//# sourceMappingURL=app.module.js.map
+exports.PostsService = PostsService;
+//# sourceMappingURL=posts.service.js.map
